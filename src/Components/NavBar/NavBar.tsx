@@ -15,7 +15,7 @@ import React, { useState } from "react";
 import CsvFileReader from "../CsvFileReader/CsvFileReader";
 import { useAppSelector } from "../../store/hooks";
 import { useDispatch } from "react-redux";
-import { clearEkgData } from "../../store/ekgDataSlice";
+import { calculateSigns, clearEkgData } from "../../store/ekgDataSlice";
 import { HighlightOff } from "@material-ui/icons";
 import { CSVDownloader } from "react-papaparse";
 import { useToasts } from "react-toast-notifications";
@@ -61,6 +61,7 @@ const useStyles = makeStyles({
 const NavBar = () => {
   const [openScvReader, setOpenCsvReader] = useState(false);
   const ekgDataPlot = useAppSelector((state) => state.ekgData.ekg);
+
   let history = useHistory();
   const { addToast } = useToasts();
   const dispatch = useDispatch();
@@ -92,6 +93,19 @@ const NavBar = () => {
             variant="text"
             color="inherit"
           >
+            <Button
+              disabled={ekgDataPlot.length === 0}
+              className={classes.loadFileButton}
+              onClick={() => {
+                dispatch(calculateSigns());
+                addToast("Signs calculated successfully.", {
+                  appearance: "success",
+                  autoDismiss: true,
+                });
+              }}
+            >
+              Try calculate signs
+            </Button>
             <Button
               className={classes.loadFileButton}
               onClick={() => setOpenCsvReader(true)}
