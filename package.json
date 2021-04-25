@@ -1,0 +1,69 @@
+{
+  "homepage": "http://Pawcio124.github.io/ECGDataAnalyzer",
+  "name": "ekgdataselector",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "*",
+    "@material/snackbar": "^11.0.0",
+    "@reduxjs/toolkit": "^1.5.1",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^12.8.3",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^12.20.10",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "plotly.js": "^1.58.4",
+    "plotly.js-dist": "^1.58.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-papaparse": "^3.12.1",
+    "react-plotly.js": "^2.5.1",
+    "react-redux": "^7.2.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-toast-notifications": "^2.4.4",
+    "redux-persist": "^6.0.0",
+    "typescript": "^4.2.4",
+    "web-vitals": "^1.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react-csv": "^1.1.1",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/redux-persist": "^4.3.1",
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "gh-pages": "^3.1.0",
+    "prettier": "2.2.1"
+  }
+}
