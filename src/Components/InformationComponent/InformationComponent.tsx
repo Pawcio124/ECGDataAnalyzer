@@ -27,7 +27,7 @@ const InformationComponent = () => {
     <Box
       marginTop={3}
       borderRadius={20}
-      width={"20%"}
+      width={"480px"}
       border={"solid 2px grey"}
       bgcolor="background.paper"
     >

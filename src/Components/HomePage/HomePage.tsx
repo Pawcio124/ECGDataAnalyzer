@@ -44,7 +44,7 @@ const HomePage = () => {
   return (
     <Box className={classes.welcomeBoxStyle}>
       <Box className={classes.textBoxStyle}>
-        <Box textAlign={"center"}>
+        <Box whiteSpace={"nowrap"} textAlign={"center"}>
           <Typography className={classes.textStyle} variant={"h2"}>
             Welcome!
           </Typography>

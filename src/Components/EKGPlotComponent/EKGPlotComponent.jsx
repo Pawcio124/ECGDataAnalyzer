@@ -9,6 +9,7 @@ import {
 } from "@material-ui/icons";
 import { Box, IconButton, makeStyles, Typography } from "@material-ui/core";
 import PointEditorDialog from "./PointEditorDialog";
+import useWindowDimensions from "../../store/customHooks/useWindowDimension";
 
 const useStyles = makeStyles({
   buttonStyle: {
@@ -28,7 +29,7 @@ const EKGPlotComponent = () => {
   const step = 100;
   const [counter, setCounter] = useState(1);
   const length = ekgDataPlot.length / step;
-
+  const { height, width } = useWindowDimensions();
   const [xAxisData, setXAxisData] = useState([]);
   const [yAxisData, setYAxisData] = useState([]);
   const [textData, setTextData] = useState([]);
@@ -111,8 +112,8 @@ const EKGPlotComponent = () => {
               ]}
               layout={{
                 annotations: annotation,
-                width: 1600,
-                height: 1000,
+                height: height * 0.75,
+                width: width * 0.75,
                 title: `ECG (${counter}/${Math.ceil(length)})`,
               }}
               onClick={(e) => {
