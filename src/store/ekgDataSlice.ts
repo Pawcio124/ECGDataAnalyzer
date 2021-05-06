@@ -36,7 +36,6 @@ interface ekgDataSliceProps {
     RIndex: number[];
     SIndex: number[];
     TIndex: number[];
-    operationNumber: number;
   };
 }
 
@@ -50,7 +49,6 @@ const initialState: ekgDataSliceProps = {
     RIndex: [],
     SIndex: [],
     TIndex: [],
-    operationNumber: 0,
   },
 };
 export const ekgDataSlice = createSlice({
@@ -79,16 +77,14 @@ export const ekgDataSlice = createSlice({
         RIndex: [],
         SIndex: [],
         TIndex: [],
-        operationNumber: 0,
       };
     },
-    calculateSigns: (state) => {
+    calculateSigns: (state, payload) => {
       let findS = false;
       let findT = false;
       let findP = false;
       let findQ = false;
       for (let i = 0; i < state.ekgDataInfo.RIndex.length; i++) {
-        state.ekgDataInfo.operationNumber = i;
         for (
           let j = state.ekgDataInfo.RIndex[i] + 1;
           j < state.ekgDataInfo.RIndex[i + 1];
@@ -112,16 +108,20 @@ export const ekgDataSlice = createSlice({
             findS
           ) {
             findT = true;
-            editQuantity(state.signQuantity, "T", 1);
-            state.ekgDataInfo.TIndex.push(j + tJump);
-            state.ekg.splice(j + tJump, 1, [
-              state.ekg[j + tJump][0],
-              state.ekg[j + tJump][1],
-              "T",
-            ]);
+            if (payload.payload.T) {
+              editQuantity(state.signQuantity, "T", 1);
+              state.ekgDataInfo.TIndex.push(j + tJump);
+              state.ekg.splice(j + tJump, 1, [
+                state.ekg[j + tJump][0],
+                state.ekg[j + tJump][1],
+                "T",
+              ]);
+            }
           }
           const PJump = 48;
           if (
+            state.ekg[j + PJump] &&
+            state.ekg[j + PJump + 1] &&
             parseInt(state.ekg[j + PJump][1]) >
               parseInt(state.ekg[j + PJump + 1][1]) &&
             j + PJump < state.ekgDataInfo.RIndex[i + 1] &&
@@ -130,13 +130,15 @@ export const ekgDataSlice = createSlice({
             !findP
           ) {
             findP = true;
-            editQuantity(state.signQuantity, "P", 1);
-            state.ekgDataInfo.PIndex.push(j + PJump);
-            state.ekg.splice(j + PJump, 1, [
-              state.ekg[j + PJump][0],
-              state.ekg[j + PJump][1],
-              "P",
-            ]);
+            if (payload.payload.P) {
+              editQuantity(state.signQuantity, "P", 1);
+              state.ekgDataInfo.PIndex.push(j + PJump);
+              state.ekg.splice(j + PJump, 1, [
+                state.ekg[j + PJump][0],
+                state.ekg[j + PJump][1],
+                "P",
+              ]);
+            }
           }
           if (
             parseInt(state.ekg[j][1]) < parseInt(state.ekg[j + 1][1]) &&

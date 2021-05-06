@@ -97,7 +97,15 @@ const NavBar = () => {
               disabled={ekgDataPlot.length === 0}
               className={classes.loadFileButton}
               onClick={() => {
-                dispatch(calculateSigns());
+                dispatch(
+                  calculateSigns({
+                    Q: true,
+                    R: true,
+                    S: true,
+                    P: false,
+                    T: false,
+                  })
+                );
                 addToast("Signs calculated successfully.", {
                   appearance: "success",
                   autoDismiss: true,

@@ -33,6 +33,10 @@ const useStyles = makeStyles({
     marginTop: "20px",
     marginBottom: "15px",
   },
+  quickOptionHints: {
+    textAlign: "center",
+    color: "gray",
+  },
 });
 
 interface SelectedPointProps {
@@ -66,8 +70,56 @@ const PointEditorDialog = ({
     { label: "S", value: "S" },
     { label: "T", value: "T" },
   ];
+
+  const handleCLickAndPress = (item: { value: string }) => {
+    dispatch(
+      addSign({
+        index: selectedPoint?.index,
+        sign: item.value,
+        oldSign: selectedPoint?.sign,
+      })
+    );
+    setSelectedPoint({ x: 0, y: 0, index: 0, sign: "" });
+    setOpenPointModal(false);
+    if (item.value === "") {
+      addToast("Sign removed.", {
+        appearance: "info",
+        autoDismiss: true,
+      });
+    } else {
+      addToast(`Sign added: '${item.value}'.`, {
+        appearance: "info",
+        autoDismiss: true,
+      });
+    }
+  };
+
   return (
     <Dialog
+      onKeyPress={(e) => {
+        switch (e.key.toLowerCase()) {
+          case "t":
+            handleCLickAndPress({ value: "T" });
+            break;
+          case "p":
+            handleCLickAndPress({ value: "P" });
+            break;
+          case "q":
+            handleCLickAndPress({ value: "Q" });
+            break;
+          case "r":
+            handleCLickAndPress({ value: "R" });
+            break;
+          case "s":
+            handleCLickAndPress({ value: "S" });
+            break;
+          case "d":
+            handleCLickAndPress({ value: "" });
+            break;
+          default:
+            break;
+        }
+      }}
       PaperProps={{
         style: {
           padding: 10,
@@ -118,34 +170,19 @@ const PointEditorDialog = ({
                   <Button
                     disabled={item.value === "" && selectedPoint?.sign === ""}
                     key={item.label}
-                    onClick={() => {
-                      dispatch(
-                        addSign({
-                          index: selectedPoint?.index,
-                          sign: item.value,
-                          oldSign: selectedPoint?.sign,
-                        })
-                      );
-                      setSelectedPoint({ x: 0, y: 0, index: 0, sign: "" });
-                      setOpenPointModal(false);
-                      if (item.value === "") {
-                        addToast("Sign removed.", {
-                          appearance: "info",
-                          autoDismiss: true,
-                        });
-                      } else {
-                        addToast(`Sign added: '${item.value}'.`, {
-                          appearance: "info",
-                          autoDismiss: true,
-                        });
-                      }
-                    }}
+                    onClick={() => handleCLickAndPress(item)}
                   >
                     {item.label}
                   </Button>
                 );
               })}
             </ButtonGroup>
+          </Grid>
+          <Grid className={classes.quickOptionHints} item xs={12}>
+            <Typography>
+              Hint: You can use keyboard buttons to mark points. Press 'd' to
+              delete.
+            </Typography>
           </Grid>
         </Grid>
       </DialogContent>
