@@ -17,8 +17,8 @@ import { useAppSelector } from "../../store/hooks";
 import { useDispatch } from "react-redux";
 import { calculateSigns, clearEkgData } from "../../store/ekgDataSlice";
 import { HighlightOff } from "@material-ui/icons";
-import { CSVDownloader } from "react-papaparse";
 import { useToasts } from "react-toast-notifications";
+import CSVFileSaveModal from "../CSVSaveModal/CSVFileSaveModal";
 
 const useStyles = makeStyles({
   logoTextStyle: {
@@ -43,14 +43,6 @@ const useStyles = makeStyles({
     position: "absolute",
     right: "30px",
   },
-  downloadLinkStyle: {
-    color: "black",
-    textDecoration: "none",
-  },
-  disabledDownloadLinkStyle: {
-    color: "rgba(0, 0, 0, 0.26)",
-    textDecoration: "none",
-  },
   closeIconStyle: {
     position: "absolute",
     right: 0,
@@ -60,6 +52,7 @@ const useStyles = makeStyles({
 
 const NavBar = () => {
   const [openScvReader, setOpenCsvReader] = useState(false);
+  const [CSVFileModalOpen, setCSVFileModalOpen] = useState(false);
   const ekgDataPlot = useAppSelector((state) => state.ekgData.ekg);
 
   let history = useHistory();
@@ -120,18 +113,11 @@ const NavBar = () => {
             >
               Load from file
             </Button>
-            <Button disabled={ekgDataPlot.length === 0}>
-              <CSVDownloader
-                filename={"ECGDataFile"}
-                className={
-                  ekgDataPlot.length === 0
-                    ? classes.disabledDownloadLinkStyle
-                    : classes.downloadLinkStyle
-                }
-                data={ekgDataPlot}
-              >
-                Save to file
-              </CSVDownloader>
+            <Button
+              onClick={() => setCSVFileModalOpen(true)}
+              disabled={ekgDataPlot.length === 0}
+            >
+              Save to file
             </Button>
             <Button
               disabled={ekgDataPlot.length === 0}
@@ -148,6 +134,10 @@ const NavBar = () => {
           </ButtonGroup>
         </Toolbar>
       </AppBar>
+      <CSVFileSaveModal
+        CSVFileModalOpen={CSVFileModalOpen}
+        setCSVFileModalOpen={setCSVFileModalOpen}
+      />
       <Dialog
         PaperProps={{
           style: {
