@@ -31,6 +31,8 @@ interface ekgDataSliceProps {
   loaded: boolean;
   signQuantity: { P: number; Q: number; R: number; S: number; T: number };
   ekgDataInfo: {
+    calculateSignsPTDone: boolean;
+    calculateSignsQSDone: boolean;
     PIndex: number[];
     QIndex: number[];
     RIndex: number[];
@@ -44,6 +46,8 @@ const initialState: ekgDataSliceProps = {
   signQuantity: { P: 0, Q: 0, R: 0, S: 0, T: 0 },
   loaded: false,
   ekgDataInfo: {
+    calculateSignsPTDone: false,
+    calculateSignsQSDone: false,
     PIndex: [],
     QIndex: [],
     RIndex: [],
@@ -72,6 +76,8 @@ export const ekgDataSlice = createSlice({
       state.signQuantity = { P: 0, Q: 0, R: 0, S: 0, T: 0 };
       state.loaded = false;
       state.ekgDataInfo = {
+        calculateSignsPTDone: false,
+        calculateSignsQSDone: false,
         PIndex: [],
         QIndex: [],
         RIndex: [],
@@ -79,10 +85,8 @@ export const ekgDataSlice = createSlice({
         TIndex: [],
       };
     },
-    calculateSigns: (state, payload) => {
+    calculateSignsQS: (state) => {
       let findS = false;
-      let findT = false;
-      let findP = false;
       let findQ = false;
       for (let i = 0; i < state.ekgDataInfo.RIndex.length; i++) {
         for (
@@ -99,53 +103,10 @@ export const ekgDataSlice = createSlice({
             state.ekgDataInfo.SIndex.push(j);
             state.ekg.splice(j, 1, [state.ekg[j][0], state.ekg[j][1], "S"]);
           }
-          const tJump = 16;
-          if (
-            parseInt(state.ekg[j + tJump][1]) >
-              parseInt(state.ekg[j + tJump + 1][1]) &&
-            !findT &&
-            j + tJump < state.ekgDataInfo.RIndex[i + 1] &&
-            findS
-          ) {
-            findT = true;
-            if (payload.payload.T) {
-              editQuantity(state.signQuantity, "T", 1);
-              state.ekgDataInfo.TIndex.push(j + tJump);
-              state.ekg.splice(j + tJump, 1, [
-                state.ekg[j + tJump][0],
-                state.ekg[j + tJump][1],
-                "T",
-              ]);
-            }
-          }
-          const PJump = 48;
-          if (
-            state.ekg[j + PJump] &&
-            state.ekg[j + PJump + 1] &&
-            parseInt(state.ekg[j + PJump][1]) >
-              parseInt(state.ekg[j + PJump + 1][1]) &&
-            j + PJump < state.ekgDataInfo.RIndex[i + 1] &&
-            findT &&
-            findS &&
-            !findP
-          ) {
-            findP = true;
-            if (payload.payload.P) {
-              editQuantity(state.signQuantity, "P", 1);
-              state.ekgDataInfo.PIndex.push(j + PJump);
-              state.ekg.splice(j + PJump, 1, [
-                state.ekg[j + PJump][0],
-                state.ekg[j + PJump][1],
-                "P",
-              ]);
-            }
-          }
           if (
             parseInt(state.ekg[j][1]) < parseInt(state.ekg[j + 1][1]) &&
             state.ekgDataInfo.RIndex[i + 1] - j <= 5 &&
-            findT &&
             findS &&
-            findP &&
             !findQ
           ) {
             findQ = true;
@@ -156,10 +117,48 @@ export const ekgDataSlice = createSlice({
           }
         }
         findS = false;
-        findT = false;
-        findP = false;
         findQ = false;
       }
+      state.ekgDataInfo.calculateSignsQSDone = true;
+    },
+    calculateSignsPT: (state) => {
+      for (let i = 0; i < state.ekgDataInfo.QIndex.length; i++) {
+        const QIndex = state.ekgDataInfo.QIndex[i];
+        const valueArray: number[] = [];
+        for (let j = 25; j > 0; j--) {
+          valueArray.push(parseInt(state.ekg[QIndex - j][1]));
+        }
+        const maxValueIndex = valueArray.indexOf(Math.max(...valueArray));
+        if (maxValueIndex !== -1) {
+          const foundPIndex = QIndex - (valueArray.length - maxValueIndex);
+          editQuantity(state.signQuantity, "P", 1);
+          state.ekgDataInfo.PIndex.push(foundPIndex);
+          state.ekg.splice(foundPIndex, 1, [
+            state.ekg[foundPIndex][0],
+            state.ekg[foundPIndex][1],
+            "P",
+          ]);
+        }
+      }
+      for (let i = 0; i < state.ekgDataInfo.SIndex.length; i++) {
+        const SIndex = state.ekgDataInfo.SIndex[i];
+        const valueArray: number[] = [];
+        for (let j = 6; j < 40; j++) {
+          valueArray.push(parseInt(state.ekg[SIndex + j][1]));
+        }
+        const maxValueIndex = valueArray.indexOf(Math.max(...valueArray));
+        if (maxValueIndex !== -1) {
+          const foundPIndex = SIndex + maxValueIndex + 6;
+          editQuantity(state.signQuantity, "T", 1);
+          state.ekgDataInfo.TIndex.push(foundPIndex);
+          state.ekg.splice(foundPIndex, 1, [
+            state.ekg[foundPIndex][0],
+            state.ekg[foundPIndex][1],
+            "T",
+          ]);
+        }
+      }
+      state.ekgDataInfo.calculateSignsPTDone = true;
     },
 
     addSign: (state, payload) => {
@@ -179,7 +178,8 @@ export const {
   saveEkgData,
   clearEkgData,
   addSign,
-  calculateSigns,
+  calculateSignsQS,
+  calculateSignsPT,
 } = ekgDataSlice.actions;
 
 export default ekgDataSlice.reducer;

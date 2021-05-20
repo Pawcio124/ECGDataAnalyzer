@@ -15,7 +15,11 @@ import React, { useState } from "react";
 import CsvFileReader from "../CsvFileReader/CsvFileReader";
 import { useAppSelector } from "../../store/hooks";
 import { useDispatch } from "react-redux";
-import { calculateSigns, clearEkgData } from "../../store/ekgDataSlice";
+import {
+  calculateSignsPT,
+  calculateSignsQS,
+  clearEkgData,
+} from "../../store/ekgDataSlice";
 import { HighlightOff } from "@material-ui/icons";
 import { useToasts } from "react-toast-notifications";
 import CSVFileSaveModal from "../CSVSaveModal/CSVFileSaveModal";
@@ -54,7 +58,9 @@ const NavBar = () => {
   const [openScvReader, setOpenCsvReader] = useState(false);
   const [CSVFileModalOpen, setCSVFileModalOpen] = useState(false);
   const ekgDataPlot = useAppSelector((state) => state.ekgData.ekg);
-
+  const { calculateSignsPTDone, calculateSignsQSDone } = useAppSelector(
+    (state) => state.ekgData.ekgDataInfo
+  );
   let history = useHistory();
   const { addToast } = useToasts();
   const dispatch = useDispatch();
@@ -87,25 +93,36 @@ const NavBar = () => {
             color="inherit"
           >
             <Button
-              disabled={ekgDataPlot.length === 0}
+              disabled={
+                ekgDataPlot.length === 0 ||
+                (ekgDataPlot.length !== 0 && calculateSignsQSDone)
+              }
               className={classes.loadFileButton}
               onClick={() => {
-                dispatch(
-                  calculateSigns({
-                    Q: true,
-                    R: true,
-                    S: true,
-                    P: false,
-                    T: false,
-                  })
-                );
-                addToast("Signs calculated successfully.", {
+                dispatch(calculateSignsQS());
+                addToast("Signs Q And S calculated successfully.", {
                   appearance: "success",
                   autoDismiss: true,
                 });
               }}
             >
-              Try calculate signs
+              Try calculate signs (Q,S)
+            </Button>
+            <Button
+              disabled={
+                !calculateSignsQSDone ||
+                (calculateSignsQSDone && calculateSignsPTDone)
+              }
+              className={classes.loadFileButton}
+              onClick={() => {
+                dispatch(calculateSignsPT());
+                addToast("Signs P and T calculated successfully.", {
+                  appearance: "success",
+                  autoDismiss: true,
+                });
+              }}
+            >
+              Try calculate signs (P,T)
             </Button>
             <Button
               className={classes.loadFileButton}
