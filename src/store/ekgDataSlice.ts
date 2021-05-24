@@ -27,6 +27,7 @@ const editQuantity = (
 };
 
 interface ekgDataSliceProps {
+  navigateByR: boolean;
   ekg: any[];
   loaded: boolean;
   signQuantity: { P: number; Q: number; R: number; S: number; T: number };
@@ -42,6 +43,7 @@ interface ekgDataSliceProps {
 }
 
 const initialState: ekgDataSliceProps = {
+  navigateByR: false,
   ekg: [],
   signQuantity: { P: 0, Q: 0, R: 0, S: 0, T: 0 },
   loaded: false,
@@ -59,6 +61,9 @@ export const ekgDataSlice = createSlice({
   name: "ekgData",
   initialState,
   reducers: {
+    setNavigateByR: (state) => {
+      state.navigateByR = !state.navigateByR;
+    },
     saveEkgData: (state, payload) => {
       payload.payload.forEach(({ data }: any, index: number) => {
         if (data[2]) {
@@ -72,6 +77,7 @@ export const ekgDataSlice = createSlice({
       state.loaded = true;
     },
     clearEkgData: (state) => {
+      state.navigateByR = false;
       state.ekg = [];
       state.signQuantity = { P: 0, Q: 0, R: 0, S: 0, T: 0 };
       state.loaded = false;
@@ -175,6 +181,7 @@ export const ekgDataSlice = createSlice({
 });
 
 export const {
+  setNavigateByR,
   saveEkgData,
   clearEkgData,
   addSign,

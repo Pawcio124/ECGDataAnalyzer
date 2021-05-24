@@ -7,6 +7,7 @@ import {
   DialogTitle,
   IconButton,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,12 +20,25 @@ import {
   calculateSignsPT,
   calculateSignsQS,
   clearEkgData,
+  setNavigateByR,
 } from "../../store/ekgDataSlice";
 import { HighlightOff } from "@material-ui/icons";
 import { useToasts } from "react-toast-notifications";
 import CSVFileSaveModal from "../CSVSaveModal/CSVFileSaveModal";
 
 const useStyles = makeStyles({
+  noMaxWidth: {
+    maxWidth: "none",
+    backgroundColor: "red",
+  },
+  buttonNavigateStyle: {
+    paddingRight: 10,
+    color: "red",
+  },
+  buttonNavigateStyleR: {
+    paddingRight: 10,
+    color: "green",
+  },
   logoTextStyle: {
     fontSize: 45,
     fontWeight: "bold",
@@ -54,10 +68,15 @@ const useStyles = makeStyles({
   },
 });
 
-const NavBar = () => {
+interface NavBarProps {
+  setCounter: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const NavBar = ({ setCounter }: NavBarProps) => {
   const [openScvReader, setOpenCsvReader] = useState(false);
   const [CSVFileModalOpen, setCSVFileModalOpen] = useState(false);
   const ekgDataPlot = useAppSelector((state) => state.ekgData.ekg);
+  const navigateByR = useAppSelector((state) => state.ekgData.navigateByR);
   const { calculateSignsPTDone, calculateSignsQSDone } = useAppSelector(
     (state) => state.ekgData.ekgDataInfo
   );
@@ -92,6 +111,34 @@ const NavBar = () => {
             variant="text"
             color="inherit"
           >
+            <Tooltip
+              arrow
+              classes={{ tooltip: classes.noMaxWidth }}
+              title={
+                navigateByR ? (
+                  ""
+                ) : (
+                  <Typography variant={"h6"}>
+                    Make sure the R points are marked
+                  </Typography>
+                )
+              }
+            >
+              <Button
+                className={
+                  navigateByR
+                    ? classes.buttonNavigateStyleR
+                    : classes.buttonNavigateStyle
+                }
+                disabled={ekgDataPlot.length === 0}
+                onClick={() => {
+                  setCounter(1);
+                  dispatch(setNavigateByR());
+                }}
+              >
+                Navigate by R ({navigateByR ? "ON" : "OFF"})
+              </Button>
+            </Tooltip>
             <Button
               disabled={
                 ekgDataPlot.length === 0 ||

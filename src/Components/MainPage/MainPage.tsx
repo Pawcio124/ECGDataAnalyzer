@@ -30,7 +30,7 @@ const MainPage = () => {
       m={1}
       p={1}
     >
-      <NavBar />
+      <NavBar setCounter={setCounter} />
       <Box
         marginTop={2}
         borderRadius={20}

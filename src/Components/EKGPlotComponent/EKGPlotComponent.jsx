@@ -26,6 +26,14 @@ const EKGPlotComponent = ({ counter, setCounter }) => {
   const ekgDataPlot = useSelector((state) => state.ekgData.ekg);
   const lengthOfR = useSelector((state) => state.ekgData.signQuantity.R);
   const indexR = useSelector((state) => state.ekgData.ekgDataInfo.RIndex);
+  const navigateByR = useSelector((state) => state.ekgData.navigateByR);
+
+  const start = 0;
+  const finish = 100;
+  const step = 100;
+
+  const length = navigateByR ? lengthOfR : Math.ceil(ekgDataPlot.length / step);
+
   const { height, width } = useWindowDimensions();
   const [xAxisData, setXAxisData] = useState([]);
   const [yAxisData, setYAxisData] = useState([]);
@@ -35,8 +43,12 @@ const EKGPlotComponent = ({ counter, setCounter }) => {
   useEffect(() => {
     if (ekgDataPlot.length) {
       let stepValue;
-      if (counter === 1) stepValue = [0, indexR[counter]];
-      else stepValue = [indexR[counter - 1], indexR[counter + 1]];
+      if (navigateByR) {
+        if (counter === 1) stepValue = [0, indexR[counter]];
+        else stepValue = [indexR[counter - 1], indexR[counter + 1]];
+      } else
+        stepValue = [start + step * (counter - 1), finish + step * counter];
+
       const annotations = [];
       setXAxisData(
         ekgDataPlot.slice(stepValue[0], stepValue[1]).map((item) => item[0])
@@ -64,11 +76,10 @@ const EKGPlotComponent = ({ counter, setCounter }) => {
       });
       setAnnotation(annotations);
     }
-  }, [ekgDataPlot, counter, indexR]);
+  }, [ekgDataPlot, counter, indexR, navigateByR]);
 
   return (
     <>
-      `
       <Box display="flex" justifyContent="center">
         {!ekgDataPlot.length ? (
           <Typography variant={"h2"}>No data to show</Typography>
@@ -107,7 +118,7 @@ const EKGPlotComponent = ({ counter, setCounter }) => {
                 annotations: annotation,
                 height: height * 0.75,
                 width: width * 0.75,
-                title: `ECG (${counter}/${lengthOfR})`,
+                title: `ECG (${counter}/${length})`,
               }}
               onClick={(e) => {
                 setOpenPointModal(true);
@@ -116,13 +127,17 @@ const EKGPlotComponent = ({ counter, setCounter }) => {
                   y: e.points[0].y,
                   index:
                     e.points[0].pointIndex +
-                    (counter === 1 ? 0 : indexR[counter - 1]),
+                    (counter === 1
+                      ? 0
+                      : navigateByR
+                      ? indexR[counter - 1]
+                      : step * (counter - 1)),
                   sign: e.points[0].text ?? "",
                 });
               }}
             />
             <IconButton
-              disabled={counter === lengthOfR}
+              disabled={counter === length}
               onClick={() => {
                 setCounter((oldValue) => oldValue + 1);
               }}
@@ -131,9 +146,9 @@ const EKGPlotComponent = ({ counter, setCounter }) => {
               <ArrowForwardIos fontSize="large" />
             </IconButton>
             <IconButton
-              disabled={counter === lengthOfR}
+              disabled={counter === length}
               onClick={() => {
-                setCounter(lengthOfR);
+                setCounter(length);
               }}
               className={classes.buttonStyle}
             >
