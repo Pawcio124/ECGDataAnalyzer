@@ -31,6 +31,10 @@ const useStyles = makeStyles({
     maxWidth: "none",
     backgroundColor: "red",
   },
+  noMaxWidthR: {
+    maxWidth: "none",
+    backgroundColor: "gray",
+  },
   buttonNavigateStyle: {
     paddingRight: 10,
     color: "red",
@@ -111,34 +115,41 @@ const NavBar = ({ setCounter }: NavBarProps) => {
             variant="text"
             color="inherit"
           >
-            <Tooltip
-              arrow
-              classes={{ tooltip: classes.noMaxWidth }}
-              title={
-                navigateByR ? (
-                  ""
-                ) : (
-                  <Typography variant={"h6"}>
-                    Make sure the R points are marked
-                  </Typography>
-                )
-              }
-            >
-              <Button
-                className={
-                  navigateByR
-                    ? classes.buttonNavigateStyleR
-                    : classes.buttonNavigateStyle
-                }
-                disabled={ekgDataPlot.length === 0}
-                onClick={() => {
-                  setCounter(1);
-                  dispatch(setNavigateByR());
+            {ekgDataPlot.length === 0 ? null : (
+              <Tooltip
+                arrow
+                classes={{
+                  tooltip: navigateByR
+                    ? classes.noMaxWidthR
+                    : classes.noMaxWidth,
                 }}
+                title={
+                  navigateByR ? (
+                    <Typography variant={"h6"}>
+                      Navigate by steps (default option)
+                    </Typography>
+                  ) : (
+                    <Typography variant={"h6"}>
+                      Make sure the R points are marked
+                    </Typography>
+                  )
+                }
               >
-                Navigate by R ({navigateByR ? "ON" : "OFF"})
-              </Button>
-            </Tooltip>
+                <Button
+                  className={
+                    navigateByR
+                      ? classes.buttonNavigateStyleR
+                      : classes.buttonNavigateStyle
+                  }
+                  onClick={() => {
+                    setCounter(1);
+                    dispatch(setNavigateByR());
+                  }}
+                >
+                  Navigate by R ({navigateByR ? "ON" : "OFF"})
+                </Button>
+              </Tooltip>
+            )}
             <Button
               disabled={
                 ekgDataPlot.length === 0 ||
