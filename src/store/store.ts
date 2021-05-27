@@ -1,17 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-// @ts-ignore
-import storage from "redux-persist/lib/storage";
-import { persistReducer } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import ekgDataSlice from "./ekgDataSlice";
 import thunk from "redux-thunk";
+import createIdbStorage from "@piotr-cz/redux-persist-idb-storage";
 
 const reducers = combineReducers({
   ekgData: ekgDataSlice,
 });
 
 const persistConfig = {
+  version: 1,
   key: "root",
-  storage,
+  storage: createIdbStorage({ name: "ECGSelector", storeName: "redux" }),
 };
 
 const persistedReducers = persistReducer(persistConfig, reducers);
@@ -21,6 +21,8 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
   middleware: [thunk],
 });
+
+export const persist = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
