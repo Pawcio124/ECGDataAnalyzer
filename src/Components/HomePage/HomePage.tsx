@@ -38,7 +38,7 @@ const HomePage = () => {
   let history = useHistory();
 
   const handleClick = () => {
-    history.push("/ekgAnalyser");
+    history.push("/ECGDataAnalyzer");
   };
 
   return (

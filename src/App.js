@@ -5,7 +5,7 @@ import MainPage from "./Components/MainPage/MainPage";
 const App = () => {
   return (
     <Switch>
-      <Route path={"/ekgAnalyser"}>
+      <Route path={"/ECGDataAnalyzer"}>
         <MainPage />
       </Route>
       <Route path={"/"}>

@@ -131,7 +131,7 @@ export const ekgDataSlice = createSlice({
       for (let i = 0; i < state.ekgDataInfo.QIndex.length; i++) {
         const QIndex = state.ekgDataInfo.QIndex[i];
         const valueArray: number[] = [];
-        for (let j = 25; j > 0; j--) {
+        for (let j = 20; j > 0; j--) {
           valueArray.push(parseInt(state.ekg[QIndex - j][1]));
         }
         const maxValueIndex = valueArray.indexOf(Math.max(...valueArray));
