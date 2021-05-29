@@ -7,6 +7,7 @@ import { useState } from "react";
 
 const MainPage = () => {
   const showInfo = useAppSelector((state) => state.ekgData.loaded);
+  const RPointsLength = useAppSelector((state) => state.ekgData.signQuantity.R);
   const [counter, setCounter] = useState(1);
   return (
     <Box
@@ -20,7 +21,8 @@ const MainPage = () => {
               break;
             case "ArrowRight":
               e.preventDefault();
-              setCounter((oldValue) => oldValue + 1);
+              if (counter < RPointsLength)
+                setCounter((oldValue) => oldValue + 1);
               break;
             default:
               break;

@@ -49,7 +49,7 @@ const HomePage = () => {
             Welcome!
           </Typography>
           <Typography className={classes.welcomeTextStyle}>
-            ECG Data Selector
+            ECG Data Analyzer
           </Typography>
           <IconButton onClick={handleClick}>
             <Input className={classes.buttonStyle} />

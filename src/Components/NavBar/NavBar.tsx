@@ -108,7 +108,7 @@ const NavBar = ({ setCounter }: NavBarProps) => {
             className={classes.logoTextStyle}
             variant="h4"
           >
-            ECG Data Selector
+            ECG Data Analyzer
           </Typography>
           <ButtonGroup
             className={classes.menuButtonStyle}
