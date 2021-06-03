@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.js": "/ECGDataAnalyzer/static/js/main.611033e1.chunk.js",
+    "main.js.map": "/ECGDataAnalyzer/static/js/main.611033e1.chunk.js.map",
+    "runtime-main.js": "/ECGDataAnalyzer/static/js/runtime-main.d01bbb2d.js",
+    "runtime-main.js.map": "/ECGDataAnalyzer/static/js/runtime-main.d01bbb2d.js.map",
+    "static/js/2.53e176a4.chunk.js": "/ECGDataAnalyzer/static/js/2.53e176a4.chunk.js",
+    "static/js/2.53e176a4.chunk.js.map": "/ECGDataAnalyzer/static/js/2.53e176a4.chunk.js.map",
+    "index.html": "/ECGDataAnalyzer/index.html",
+    "static/js/2.53e176a4.chunk.js.LICENSE.txt": "/ECGDataAnalyzer/static/js/2.53e176a4.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d01bbb2d.js",
+    "static/js/2.53e176a4.chunk.js",
+    "static/js/main.611033e1.chunk.js"
+  ]
+}
